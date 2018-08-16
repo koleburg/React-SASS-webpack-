@@ -1,4 +1,8 @@
 # Webpack для React и SASS
 
-1. Запуск: npm run start
-2. Билд в продакшн: npm run build
+### Запуск: 
+    npm run start
+    yarn start
+### Билд в продакшн:
+    npm run build 
+    yarn build
