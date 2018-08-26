@@ -10,14 +10,14 @@
 
 ### Структура
 
-    -- node_modules
-    -- build
-        -- img
-        -- js
+    -- node_modules/
+    -- build/
+        -- img/
+        -- js/
             -- bundle.js
         -- index.html
         -- styles.css
-    -- src 
+    -- src/
         -- // в процессе переделки
     -- webpack.config.js
     -- package.json
