@@ -1,90 +1,71 @@
-const path = require('path');
-const argv = require('yargs').argv;
+const path = require("path");
 const autoprefixer = require('autoprefixer');
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-
-const isDevelopment = argv.mode === 'development';
-const isProduction = !isDevelopment;
 
 module.exports = {
     output: {
-        path: path.resolve('dist'),
-        filename: 'bundle.js'
-    },
-    module: {
-        rules: [
-            {
-                oneOf: [
-                    {
-                        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                        loader: require.resolve('url-loader'),
-                        options: {
-                            limit: 10000,
-                            name: 'media/img/[name].[ext]',
-                        },
-                    },
-                    {
-                        test: /\.(js|jsx|mjs)$/,
-                        include: path.appSrc,
-                        loader: require.resolve('babel-loader'),
-                        options: {
-                            compact: true,
-                        },
-                    },
-                    {
-                        test: /\.(s*)ass$/,
-                        exclude: /node_modules/,
-                        use: [
-                            isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-                            {
-                                loader: require.resolve('css-loader'),
-                                options: {
-                                    importLoaders: 1,
-                                    minimize: isProduction
-                                }
-                            },
-                            {
-                                loader: require.resolve('postcss-loader'),
-                                options: {
-                                    ident: 'postcss',
-                                    plugins: () => [
-                                        require('postcss-flexbugs-fixes'),
-                                        autoprefixer({
-                                            browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
-                                            flexbox: 'no-2009',
-                                        }),
-                                    ],
-                                },
-                            },
-                            {
-                                loader: require.resolve('sass-loader'),
-                            },
-                        ]
-                    },
-                    {
-                        loader: require.resolve('file-loader'),
-                        exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
-                        options: {
-                            name: 'static/media/[name].[ext]',
-                        },
-                    },
-                ],
-            }
-        ]
+        path: path.join(__dirname, "/build"),
+        filename: "./js/bundle.js",
+        crossOriginLoading: 'anonymous',
     },
     devServer: {
         historyApiFallback: true,
     },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                }
+            },
+            {
+                test: /\.(bmp|gif|jpe?g|png|svg)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'img/[name].[ext]',
+                },
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader'
+                })
+            },
+            {
+                test: /\.sass$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        'css-loader',
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    require('postcss-flexbugs-fixes'),
+                                    autoprefixer({
+                                        browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
+                                        flexbox: 'no-2009',
+                                    }),
+                                ],
+                            },
+                        }, 
+                        'sass-loader'
+                    ]
+                })
+            }
+        ]
+    },
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false
-            }),
+            new UglifyJsPlugin({}),
             new OptimizeCSSAssetsPlugin({})
         ]
     },
@@ -94,19 +75,11 @@ module.exports = {
             filename: "./index.html",
             minify: {
                 removeComments: true,
-                collapseWhitespace: true,
-                removeRedundantAttributes: true,
-                useShortDoctype: true,
-                removeEmptyAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                keepClosingSlash: true,
                 minifyJS: true,
                 minifyCSS: true,
                 minifyURLs: true,
             }
         }),
-        new MiniCssExtractPlugin({
-            filename: 'styles.css'
-        }),
+        new ExtractTextPlugin("styles.css"),
     ]
 };
