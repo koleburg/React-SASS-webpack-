@@ -8,6 +8,10 @@
     npm run build 
     yarn build
 
+### Удаление папки build/
+    npm run clear 
+    yarn clear
+
 ### Структура
 
     -- node_modules/
