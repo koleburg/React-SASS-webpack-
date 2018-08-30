@@ -4,9 +4,9 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --hot --open",
-    "start:prod": "webpack-dev-server --mode production --hot --open",
-    "build": "webpack --mode production"
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production",
+    "clear": "rd /S /Q build"
   },
   "keywords": [],
   "author": "Andrew Kovalenko <andrew@koleburg.ru> (http://koleburg.ru)",
@@ -20,6 +20,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "css-hot-loader": "^1.4.2",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^2.0.0",
