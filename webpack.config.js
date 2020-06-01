@@ -17,14 +17,14 @@ module.exports = (env, argv) =>  {
         devServer: {
             hot: true,
             historyApiFallback: true,
-            host: '192.168.1.11',
+            host: '127.0.0.1',
             port: 8080,
             inline: true,
         },
         module: {
             rules: [
                 {
-                    test: /\.js$/,
+                    test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     use: {
                         loader: 'babel-loader',
@@ -57,10 +57,7 @@ module.exports = (env, argv) =>  {
                                     ident: 'postcss',
                                     plugins: () => [
                                         require('postcss-flexbugs-fixes'),
-                                        autoprefixer({
-                                            browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
-                                            flexbox: 'no-2009',
-                                        }),
+                                        autoprefixer(),
                                     ],
                                 },
                             },
